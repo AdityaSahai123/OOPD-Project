@@ -1,8 +1,10 @@
 #include "wifi_simulator.h"
 #include <iostream>
-#include <iomanip> // For formatting output
+#include <iomanip>
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <fstream> // Include for file operations
 
 // Constructor
 WiFiSimulator::WiFiSimulator(int numUsers) : numUsers(numUsers) {
@@ -15,7 +17,6 @@ void WiFiSimulator::printResultsTable(const std::vector<SimulationResult>& resul
     std::cout << "|-------|------------------|-------------------|------------------|------------------|\n";
     
     for (const auto& result : results) {
-        // Adjust the widths and precision to ensure better formatting
         std::cout << "| " 
                   << std::setw(6) << result.numUsers << " | " 
                   << std::setw(16) << result.wifiType << " | "
@@ -24,6 +25,60 @@ void WiFiSimulator::printResultsTable(const std::vector<SimulationResult>& resul
                   << std::setw(16) << std::fixed << std::setprecision(4) << result.maxLatency << " |\n";
     }
 }
+
+// Function to print bar chart
+void WiFiSimulator::printBarChart(const std::vector<SimulationResult>& results) {
+    const int barWidth = 50; // Width of the bar chart
+    double maxThroughput = 0, maxAvgLatency = 0, maxMaxLatency = 0;
+
+    // Find maximum values for scaling
+    for (const auto& result : results) {
+        maxThroughput = std::max(maxThroughput, result.throughput);
+        maxAvgLatency = std::max(maxAvgLatency, result.avgLatency);
+        maxMaxLatency = std::max(maxMaxLatency, result.maxLatency);
+    }
+
+    std::cout << "\nThroughput (Mbps) Bar Chart:\n";
+    for (const auto& result : results) {
+        int barLength = static_cast<int>((result.throughput / maxThroughput) * barWidth);
+        std::cout << result.wifiType << ": " << std::string(barLength, '=') << " " << result.throughput << " Mbps\n";
+    }
+
+    std::cout << "\nAverage Latency (ms) Bar Chart:\n";
+    for (const auto& result : results) {
+        int barLength = static_cast<int>((result.avgLatency / maxAvgLatency) * barWidth);
+        std::cout << result.wifiType << ": " << std::string(barLength, '=') << " " << result.avgLatency << " ms\n";
+    }
+
+    std::cout << "\nMaximum Latency (ms) Bar Chart:\n";
+    for (const auto& result : results) {
+        int barLength = static_cast<int>((result.maxLatency / maxMaxLatency) * barWidth);
+        std::cout << result.wifiType << ": " << std::string(barLength, '=') << " " << result.maxLatency << " ms\n";
+    }
+}
+
+// Function to log results to a log file
+void WiFiSimulator::logResultsToFile(const std::vector<SimulationResult>& results) {
+    std::ofstream logFile("simulation_log.txt", std::ios::app); // Open file in append mode
+
+    if (logFile.is_open()) {
+        logFile << "| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |\n";
+        logFile << "|-------|------------------|-------------------|------------------|------------------|\n";
+        
+        for (const auto& result : results) {
+            logFile << "| " 
+                    << std::setw(6) << result.numUsers << " | " 
+                    << std::setw(16) << result.wifiType << " | "
+                    << std::setw(17) << std::fixed << std::setprecision(4) << result.throughput << " | "
+                    << std::setw(16) << std::fixed << std::setprecision(4) << result.avgLatency << " | "
+                    << std::setw(16) << std::fixed << std::setprecision(4) << result.maxLatency << " |\n";
+        }
+        logFile.close(); // Close the file after writing
+    } else {
+        std::cerr << "Error opening log file!" << std::endl;
+    }
+}
+
 // Run the simulation for all WiFi types
 void WiFiSimulator::runSimulation() {
     std::vector<SimulationResult> results;
@@ -59,4 +114,10 @@ void WiFiSimulator::runSimulation() {
 
     // Print results in tabular format
     printResultsTable(results);
+
+    // Print visualization
+    printBarChart(results);
+
+    // Log the results to a file
+    logResultsToFile(results);
 }
