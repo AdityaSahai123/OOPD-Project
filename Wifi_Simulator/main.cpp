@@ -21,7 +21,6 @@ public:
         return *this;
     }
 
-    // Handle endl and other manipulators
     TeeStream& operator<<(std::ostream& (*manip)(std::ostream&)) {
         console << manip;
         logFile << manip;
@@ -84,7 +83,6 @@ int main() {
             simulator.runSimulation();
         }
 
-        // Ask if user wants to run another simulation
         char runAgain;
         output << "Would you like to run another simulation? (y/n): ";
         std::cin >> runAgain;
