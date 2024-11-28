@@ -19,7 +19,7 @@ private:
     int numSubchannels;
     double bandwidthMHz;
     int packetSize;
-    std::vector<User> users;  // Declare users vector to store user objects
+    std::vector<User> users;  
 };
 
 #endif
