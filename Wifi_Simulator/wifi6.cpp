@@ -7,7 +7,7 @@ WiFi6::WiFi6(int numUsers, int numSubchannels, double bandwidthMHz, int packetSi
     : numUsers(numUsers), numSubchannels(numSubchannels), bandwidthMHz(bandwidthMHz), packetSize(packetSize) {
 
     for (int i = 0; i < numUsers; ++i) {
-        users.emplace_back(i);  // Add each user to the users vector
+        users.emplace_back(i);  // Adding each user to the vector
     }
 }
 
@@ -15,9 +15,8 @@ double WiFi6::simulateTransmission() {
     double totalTime = 0.0;
 
     // CSI phase (200 bytes per user)
-    totalTime += (CSI_PACKET_SIZE * 8 * numUsers) / (bandwidthMHz * 1e6);  // Adjust time based on bandwidth
-
-    // Simulate round-robin OFDMA scheduling
+    totalTime += (CSI_PACKET_SIZE * 8 * numUsers) / (bandwidthMHz * 1e6);  
+    // Simulating round-robin OFDMA scheduling
     int rounds = static_cast<int>(std::ceil((double)numUsers / numSubchannels));
     totalTime += rounds * OFDMA_PARALLEL_TIME_MS * 1e-3;  // Time in seconds
 
@@ -28,7 +27,7 @@ double WiFi6::calculateThroughput() {
     double subchannelBandwidth = bandwidthMHz / numSubchannels;  // Bandwidth per subchannel
     double baseThroughput = subchannelBandwidth * BITS_PER_SYMBOL * CODING_RATE;  // Per subchannel
 
-    // Apply efficiency scaling for user impact
+    
     double userPenalty = std::pow((double)numUsers / numSubchannels, 1.3);  // Softer penalty
     baseThroughput /= userPenalty;
 
@@ -36,7 +35,7 @@ double WiFi6::calculateThroughput() {
     double maxThroughput = bandwidthMHz * BITS_PER_SYMBOL * CODING_RATE;
     baseThroughput = std::min(baseThroughput * numSubchannels, maxThroughput);
 
-    return baseThroughput;  // Mbps
+    return std::max(baseThroughput, 1.0001);
 }
 
 double WiFi6::calculateAverageLatency() {
