@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream> 
-
+using namespace std;
 WiFi6::WiFi6(int numUsers, int numSubchannels, double bandwidthMHz, int packetSize)
     : numUsers(numUsers), numSubchannels(numSubchannels), bandwidthMHz(bandwidthMHz), packetSize(packetSize) {
 
@@ -12,7 +12,7 @@ WiFi6::WiFi6(int numUsers, int numSubchannels, double bandwidthMHz, int packetSi
     }
 
     if (numSubchannels > bandwidthMHz / 2) {
-        std::cerr << "Warning: Number of subchannels exceeds practical limit. Adjusting to max possible." << std::endl;
+        cerr << "Warning: Number of subchannels exceeds practical limit. Adjusting to max possible." << endl;
         numSubchannels = static_cast<int>(bandwidthMHz / 2);
     }
 }
@@ -24,7 +24,7 @@ double WiFi6::simulateTransmission() {
     totalTime += (CSI_PACKET_SIZE * 8 * numUsers) / (bandwidthMHz * 1e6);  
     
     //round robin
-    int rounds = static_cast<int>(std::ceil((double)numUsers / numSubchannels));
+    int rounds = static_cast<int>(ceil((double)numUsers / numSubchannels));
     totalTime += rounds * OFDMA_PARALLEL_TIME_MS * 1e-3;  
 
     totalTime += rounds * GUARD_INTERVAL_MS * 1e-3;  
@@ -33,18 +33,22 @@ double WiFi6::simulateTransmission() {
 }
 
 double WiFi6::calculateThroughput() {
-    double subchannelBandwidth = bandwidthMHz / numSubchannels;  // Bandwidth per subchannel
-    double baseThroughput = subchannelBandwidth * BITS_PER_SYMBOL * CODING_RATE;  // Per subchannel
-
-    // Adjust throughput based on contention (heuristic model)
-    double userPenalty = std::pow((double)numUsers / numSubchannels, 1.3);  
-    baseThroughput /= userPenalty;
-
-    // Max throughput can't exceed total channel capacity
+    double subchannelBandwidth = bandwidthMHz / numSubchannels;
+    double baseThroughput = subchannelBandwidth * BITS_PER_SYMBOL * CODING_RATE;
+    
+    double usersPerSubchannel = static_cast<double>(numUsers) / numSubchannels;
+    double userPenalty = pow(usersPerSubchannel, 0.9); 
+    
+    double adjustedThroughput = baseThroughput / userPenalty;
+    
     double maxThroughput = bandwidthMHz * BITS_PER_SYMBOL * CODING_RATE;
-    baseThroughput = std::min(baseThroughput * numSubchannels, maxThroughput);
-
-    return std::max(baseThroughput, 1.0001);  // Ensure minimum throughput is non-zero
+    double finalThroughput = min(adjustedThroughput * numSubchannels, maxThroughput);
+    finalThroughput *= 0.8;  
+    
+    double randomFactor = 0.95 + (static_cast<double>(rand()) / RAND_MAX) * 0.1;  // Random between 0.95 and 1.05
+    finalThroughput *= randomFactor;
+    
+    return max(finalThroughput, 1.0001);
 }
 
 double WiFi6::calculateAverageLatency() {
