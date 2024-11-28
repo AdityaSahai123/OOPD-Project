@@ -1,9 +1,10 @@
+//added functionality
 #include "wifi4.h"
 #include "constants.h"
 #include <random>
 #include <algorithm>
-
-WiFi4::WiFi4(int numUsers, std::shared_ptr<AccessPoint> ap)
+using namespace std;
+WiFi4::WiFi4(int numUsers, shared_ptr<AccessPoint> ap)
     : numUsers(numUsers), ap(ap), averageLatency(0.0), maxLatency(0.0) {
     for (int i = 0; i < numUsers; ++i) {
         users.emplace_back(i);
@@ -23,25 +24,28 @@ double WiFi4::calculateMaxLatency() {
 }
 
 double WiFi4::simulateTransmission() {
-   
-    
     double totalTime = 0.0;
     double totalData = 0.0;
     double maxLatencyObserved = 0.0;
     double totalLatencyObserved = 0.0;
-    double baseThroughput = 20.0; 
+    double pen = 20.0;  // Starting throughput in Mbps
     int successfulTransmissions = 0;
 
     // Random number generator
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    random_device rd;
+    mt19937 gen(rd());
     
-    // Backoff parameters
+   
+    uniform_real_distribution<> randomVariation(0.95, 1.05); 
+    double randomFactor = randomVariation(gen);  
+    pen *= randomFactor; 
+    
+    // Backoff
     const int MIN_CONTENTION_WINDOW = 16; // Initial minimum contention window
     const int MAX_CONTENTION_WINDOW = 1024; // Maximum contention window
 
     // User impact factor
-    double userPenaltyFactor = 1.0 / std::pow(numUsers, 0.7);
+    double userPenaltyFactor = 1.0 / pow(numUsers, 0.7);
     
     for (int i = 0; i < numUsers; ++i) {
         bool transmitted = false;
@@ -56,7 +60,7 @@ double WiFi4::simulateTransmission() {
                 double transmissionTime = (PACKET_SIZE * 8) / (BANDWIDTH_MHZ * 1e6 * CODING_RATE);
                 
                 // Simulate backoff before transmission
-                std::uniform_int_distribution<> backoffDist(0, currentContentionWindow - 1);
+                uniform_int_distribution<> backoffDist(0, currentContentionWindow - 1);
                 double backoffTime = backoffDist(gen) * 9;
                 
                 packetLatency += backoffTime;
@@ -73,13 +77,13 @@ double WiFi4::simulateTransmission() {
 
                 transmitted = true;
                 totalLatencyObserved += packetLatency;
-                maxLatencyObserved = std::max(maxLatencyObserved, packetLatency);
+                maxLatencyObserved = max(maxLatencyObserved, packetLatency);
 
                 // Reset contention window
                 currentContentionWindow = MIN_CONTENTION_WINDOW;
             } else {
                 // Exponential backoff
-                std::uniform_int_distribution<> backoffDist(0, currentContentionWindow - 1);
+                uniform_int_distribution<> backoffDist(0, currentContentionWindow - 1);
                 double backoffTime = backoffDist(gen) * 9;
                 
                 totalTime += backoffTime;
@@ -87,7 +91,7 @@ double WiFi4::simulateTransmission() {
                 retries++;
 
                 // Exponentially increase contention window
-                currentContentionWindow = std::min(currentContentionWindow * 2, MAX_CONTENTION_WINDOW);
+                currentContentionWindow = min(currentContentionWindow * 2, MAX_CONTENTION_WINDOW);
             }
         }
     }
@@ -101,12 +105,12 @@ double WiFi4::simulateTransmission() {
     }
 
     // Throughput calculation with user penalty
-    double adjustedThroughput = baseThroughput * userPenaltyFactor;
+    double adjustedThroughput = pen * userPenaltyFactor;
     
     // Contention penalty
-    double contentionPenalty = 1.0 + (std::log(numUsers + 1) * 0.3);
+    double contentionPenalty = 1.0 + (log(numUsers + 1) * 0.3);
     adjustedThroughput /= contentionPenalty;
 
-    // Ensure minimum throughput
-    return std::max(adjustedThroughput, 1.0);
+
+    return max(adjustedThroughput, 1.0);
 }
