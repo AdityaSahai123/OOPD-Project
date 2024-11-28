@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <vector>
+#include <chrono>
+#include <ctime>
 #include "wifi_simulator.h"
 
 class TeeStream {
@@ -12,8 +15,9 @@ public:
 
     template<typename T>
     TeeStream& operator<<(const T& data) {
-        console << data;
-        logFile << data;
+        auto timestamp = getCurrentTimestamp();
+        console << "[" << timestamp << "] " << data;
+        logFile << "[" << timestamp << "] " << data;
         return *this;
     }
 
@@ -22,6 +26,14 @@ public:
         console << manip;
         logFile << manip;
         return *this;
+    }
+
+    static std::string getCurrentTimestamp() {
+        auto now = std::chrono::system_clock::now();
+        std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+        char buffer[20];
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", std::localtime(&currentTime));
+        return std::string(buffer);
     }
 };
 
