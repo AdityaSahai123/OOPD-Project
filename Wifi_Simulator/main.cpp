@@ -5,62 +5,98 @@
 #include <chrono>
 #include <ctime>
 #include "wifi_simulator.h"
+using namespace std;
+class BaseLogger {
+protected:
+    static string getCurrentTimestamp() {
+        auto now = chrono::system_clock::now();
+        time_t currentTime = chrono::system_clock::to_time_t(now);
+        char buffer[20];
+        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localtime(&currentTime));
+        return string(buffer);
+    }
 
-class TeeStream {
-    std::ostream& console;
-    std::ofstream& logFile;
+    virtual void writeLog(const string& timestamp, const string& data) = 0;
+};
+
+class TeeStream : public BaseLogger {
+    ostream& console;
+    ofstream& logFile;
+
+protected:
+    void writeLog(const string& timestamp, const string& data) override {
+        console << "[" << timestamp << "] " << data;
+        logFile << "[" << timestamp << "] " << data;
+    }
+
 public:
-    TeeStream(std::ostream& console, std::ofstream& logFile) 
+    TeeStream(ostream& console, ofstream& logFile) 
         : console(console), logFile(logFile) {}
 
     template<typename T>
     TeeStream& operator<<(const T& data) {
         auto timestamp = getCurrentTimestamp();
-        console << "[" << timestamp << "] " << data;
-        logFile << "[" << timestamp << "] " << data;
+        writeLog(timestamp, to_string(data));
         return *this;
     }
 
-    TeeStream& operator<<(std::ostream& (*manip)(std::ostream&)) {
+    TeeStream& operator<<(const string& data) {
+        auto timestamp = getCurrentTimestamp();
+        writeLog(timestamp, data);
+        return *this;
+    }
+    TeeStream& operator<<(const char* data) {
+        auto timestamp = getCurrentTimestamp();
+        writeLog(timestamp, string(data));
+        return *this;
+    }
+
+    TeeStream& operator<<(ostream& (*manip)(ostream&)) {
         console << manip;
         logFile << manip;
         return *this;
     }
+};
 
-    static std::string getCurrentTimestamp() {
-        auto now = std::chrono::system_clock::now();
-        std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
-        char buffer[20];
-        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", std::localtime(&currentTime));
-        return std::string(buffer);
+
+class MenuDisplay : public BaseLogger {
+    TeeStream& output;
+
+protected:
+    void writeLog(const string& timestamp, const string& data) override {
+        output << data;
+    }
+
+public:
+    MenuDisplay(TeeStream& tee) : output(tee) {}
+
+    void display() {
+        output << "Select the number of users to simulate:\n";
+        output << "1. 1 user\n";
+        output << "2. 10 users\n";
+        output << "3. 100 users\n";
+        output << "4. Simulate all options\n";
+        output << "Enter your choice: ";
     }
 };
 
-void displayMenu(TeeStream& output) {
-    output << "Select the number of users to simulate:\n";
-    output << "1. 1 user\n";
-    output << "2. 10 users\n";
-    output << "3. 100 users\n";
-    output << "4. Simulate all options\n";
-    output << "Enter your choice: ";
-}
-
 int main() {
-    std::ofstream logFile("simulation_log.txt", std::ios::app);
-    TeeStream output(std::cout, logFile);
+    ofstream logFile("simulation_log.txt", ios::app);
+    TeeStream output(cout, logFile);
+    MenuDisplay menu(output);
 
     while (true) {
-        displayMenu(output);
+        menu.display();
 
         int choice;
-        std::cin >> choice;
+        cin >> choice;
 
         if (choice < 1 || choice > 4) {
             output << "Invalid choice. Please try again.\n";
             continue;
         }
 
-        std::vector<int> users;
+        vector<int> users;
 
         switch (choice) {
             case 1:
@@ -85,7 +121,7 @@ int main() {
 
         char runAgain;
         output << "Would you like to run another simulation? (y/n): ";
-        std::cin >> runAgain;
+        cin >> runAgain;
 
         if (runAgain == 'n' || runAgain == 'N') {
             break;
