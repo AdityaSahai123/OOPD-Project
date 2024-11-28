@@ -12,6 +12,6 @@ void User::setChannel(Channel* channel) {
 }
 
 bool User::canTransmit() const {
-    // Fix: Properly invoke the isBusy method with parentheses
+    //invoking paranthesis
     return assignedChannel && !assignedChannel->isBusy();
 }
