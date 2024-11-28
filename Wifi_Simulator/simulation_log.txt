@@ -1,0 +1,124 @@
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|      1 |           WiFi 4 |           16.5025 |         117.0005 |         117.0005 |
+|      1 |           WiFi 5 |           25.1750 |          15.4096 |          15.4896 |
+|      1 |   WiFi 6 (10 SC) |          133.3333 |           5.1800 |           5.5000 |
+|      1 |    WiFi 6 (5 SC) |          133.3333 |           5.3600 |           6.0000 |
+|      1 |    WiFi 6 (2 SC) |          133.3333 |           5.9000 |           7.5000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|      1 |           WiFi 4 |           16.2731 |         126.0005 |         126.0005 |
+|      1 |           WiFi 5 |           25.1750 |          15.4096 |          15.4896 |
+|      1 |   WiFi 6 (10 SC) |          133.3333 |           5.1800 |           5.5000 |
+|      1 |    WiFi 6 (5 SC) |          133.3333 |           5.3600 |           6.0000 |
+|      1 |    WiFi 6 (2 SC) |          133.3333 |           5.9000 |           7.5000 |
+Select the number of users to simulate:
+1. 1 user
+2. 10 users
+3. 100 users
+4. Simulate all options
+Enter your choice: 
+Simulating with 1 user(s):
+Would you like to run another simulation? (y/n): Select the number of users to simulate:
+1. 1 user
+2. 10 users
+3. 100 users
+4. Simulate all options
+Enter your choice: 
+Simulating with 1 user(s):
+Would you like to run another simulation? (y/n): | Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|      1 |           WiFi 4 |           17.1256 |           9.0005 |           9.0005 |
+|      1 |           WiFi 5 |           25.1750 |          15.4096 |          15.4896 |
+|      1 |   WiFi 6 (10 SC) |          133.3333 |           5.1800 |           5.5000 |
+|      1 |    WiFi 6 (5 SC) |          133.3333 |           5.3600 |           6.0000 |
+|      1 |    WiFi 6 (2 SC) |          133.3333 |           5.9000 |           7.5000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|     10 |           WiFi 4 |            2.2587 |          66.6005 |         135.0005 |
+|     10 |           WiFi 5 |           20.0923 |          15.7696 |          16.2096 |
+|     10 |   WiFi 6 (10 SC) |          133.3333 |           6.8000 |          10.0000 |
+|     10 |    WiFi 6 (5 SC) |           54.1502 |           8.6000 |          15.0000 |
+|     10 |    WiFi 6 (2 SC) |           16.4542 |          14.0000 |          30.0000 |
+Select the number of users to simulate:
+1. 1 user
+2. 10 users
+3. 100 users
+4. Simulate all options
+Enter your choice: 
+Simulating with 1 user(s):
+Would you like to run another simulation? (y/n): Select the number of users to simulate:
+1. 1 user
+2. 10 users
+3. 100 users
+4. Simulate all options
+Enter your choice: 
+Simulating with 10 user(s):
+Would you like to run another simulation? (y/n): | Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|      1 |           WiFi 4 |           16.1974 |         126.0005 |         126.0005 |
+|      1 |           WiFi 5 |           25.1750 |          15.4096 |          15.4896 |
+|      1 |   WiFi 6 (10 SC) |          133.3333 |           5.1800 |           5.5000 |
+|      1 |    WiFi 6 (5 SC) |          133.3333 |           5.3600 |           6.0000 |
+|      1 |    WiFi 6 (2 SC) |          133.3333 |           5.9000 |           7.5000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|     10 |           WiFi 4 |            2.4217 |          71.1005 |         135.0005 |
+|     10 |           WiFi 5 |           20.0923 |          15.7696 |          16.2096 |
+|     10 |   WiFi 6 (10 SC) |          133.3333 |           6.8000 |          10.0000 |
+|     10 |    WiFi 6 (5 SC) |           54.1502 |           8.6000 |          15.0000 |
+|     10 |    WiFi 6 (2 SC) |           16.4542 |          14.0000 |          30.0000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|    100 |           WiFi 4 |            1.0000 |          72.2705 |         135.0005 |
+|    100 |           WiFi 5 |            4.0089 |          19.3696 |          23.4096 |
+|    100 |   WiFi 6 (10 SC) |            6.6825 |          23.0000 |          55.0000 |
+|    100 |    WiFi 6 (5 SC) |            2.7139 |          41.0000 |         105.0000 |
+|    100 |    WiFi 6 (2 SC) |            0.8247 |          95.0000 |         255.0000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|      1 |           WiFi 4 |           16.8889 |          63.0005 |          63.0005 |
+|      1 |           WiFi 5 |           25.1750 |          15.4096 |          15.4896 |
+|      1 |   WiFi 6 (10 SC) |          133.3333 |           5.1800 |           5.5000 |
+|      1 |    WiFi 6 (5 SC) |          133.3333 |           5.3600 |           6.0000 |
+|      1 |    WiFi 6 (2 SC) |          133.3333 |           5.9000 |           7.5000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|     10 |           WiFi 4 |            2.3915 |          33.3005 |          63.0005 |
+|     10 |           WiFi 5 |           20.0923 |          15.7696 |          16.2096 |
+|     10 |   WiFi 6 (10 SC) |          133.3333 |           6.8000 |          10.0000 |
+|     10 |    WiFi 6 (5 SC) |           54.1502 |           8.6000 |          15.0000 |
+|     10 |    WiFi 6 (2 SC) |           16.4542 |          14.0000 |          30.0000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|    100 |           WiFi 4 |            1.0000 |          66.6905 |         135.0005 |
+|    100 |           WiFi 5 |            4.0089 |          19.3696 |          23.4096 |
+|    100 |   WiFi 6 (10 SC) |            6.6825 |          23.0000 |          55.0000 |
+|    100 |    WiFi 6 (5 SC) |            2.7139 |          41.0000 |         105.0000 |
+|    100 |    WiFi 6 (2 SC) |            0.8247 |          95.0000 |         255.0000 |
+| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |
+|-------|------------------|-------------------|------------------|------------------|
+|      1 |           WiFi 4 |           17.1929 |          27.0005 |          27.0005 |
+|      1 |           WiFi 5 |           25.1750 |          15.4096 |          15.4896 |
+|      1 |   WiFi 6 (10 SC) |          133.3333 |           5.1800 |           5.5000 |
+|      1 |    WiFi 6 (5 SC) |          133.3333 |           5.3600 |           6.0000 |
+|      1 |    WiFi 6 (2 SC) |          133.3333 |           5.9000 |           7.5000 |
+Select the number of users to simulate:
+1. 1 user
+2. 10 users
+3. 100 users
+4. Simulate all options
+Enter your choice: 
+Simulating with 1 user(s):
+
+Simulating with 10 user(s):
+
+Simulating with 100 user(s):
+Would you like to run another simulation? (y/n): Select the number of users to simulate:
+1. 1 user
+2. 10 users
+3. 100 users
+4. Simulate all options
+Enter your choice: 
+Simulating with 1 user(s):
+Would you like to run another simulation? (y/n): 
