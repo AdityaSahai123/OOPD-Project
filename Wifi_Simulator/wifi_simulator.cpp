@@ -4,14 +4,12 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <fstream> // Include for file operations
+#include <fstream> 
 
-// Constructor
 WiFiSimulator::WiFiSimulator(int numUsers) : numUsers(numUsers) {
-    ap = std::make_shared<AccessPoint>(20.0); // 20 MHz bandwidth
+    ap = std::make_shared<AccessPoint>(20.0); // 20 MH B
 }
 
-// Function to print results in a tabular format
 void WiFiSimulator::printResultsTable(const std::vector<SimulationResult>& results) {
     std::cout << "| Users | WiFi Type        | Throughput (Mbps) | Avg Latency (ms) | Max Latency (ms) |\n";
     std::cout << "|-------|------------------|-------------------|------------------|------------------|\n";
@@ -26,12 +24,10 @@ void WiFiSimulator::printResultsTable(const std::vector<SimulationResult>& resul
     }
 }
 
-// Function to print bar chart
 void WiFiSimulator::printBarChart(const std::vector<SimulationResult>& results) {
-    const int barWidth = 50; // Width of the bar chart
+    const int barWidth = 50;
     double maxThroughput = 0, maxAvgLatency = 0, maxMaxLatency = 0;
 
-    // Find maximum values for scaling
     for (const auto& result : results) {
         maxThroughput = std::max(maxThroughput, result.throughput);
         maxAvgLatency = std::max(maxAvgLatency, result.avgLatency);
@@ -57,7 +53,6 @@ void WiFiSimulator::printBarChart(const std::vector<SimulationResult>& results) 
     }
 }
 
-// Function to log results to a log file
 void WiFiSimulator::logResultsToFile(const std::vector<SimulationResult>& results) {
     std::ofstream logFile("simulation_log.txt", std::ios::app); // Open file in append mode
 
@@ -73,17 +68,17 @@ void WiFiSimulator::logResultsToFile(const std::vector<SimulationResult>& result
                     << std::setw(16) << std::fixed << std::setprecision(4) << result.avgLatency << " | "
                     << std::setw(16) << std::fixed << std::setprecision(4) << result.maxLatency << " |\n";
         }
-        logFile.close(); // Close the file after writing
+        logFile.close(); 
     } else {
         std::cerr << "Error opening log file!" << std::endl;
     }
 }
 
-// Run the simulation for all WiFi types
+
 void WiFiSimulator::runSimulation() {
     std::vector<SimulationResult> results;
 
-    // WiFi 4 simulation
+    // WiFi 4 
     WiFi4 wifi4(numUsers, ap);
     results.push_back({
         numUsers, "WiFi 4",
@@ -92,7 +87,7 @@ void WiFiSimulator::runSimulation() {
         wifi4.calculateMaxLatency()
     });
 
-    // WiFi 5 simulation
+    // WiFi 5 
     WiFi5 wifi5(numUsers, ap);
     results.push_back({
         numUsers, "WiFi 5",
@@ -101,7 +96,7 @@ void WiFiSimulator::runSimulation() {
         wifi5.calculateMaxLatency()
     });
 
-    // WiFi 6 simulation for different subchannel configurations
+    // WiFi 6 
     for (int subchannels : {10, 5, 2}) {
         WiFi6 wifi6(numUsers, subchannels, 20.0, 1024);
         results.push_back({
@@ -112,12 +107,7 @@ void WiFiSimulator::runSimulation() {
         });
     }
 
-    // Print results in tabular format
     printResultsTable(results);
-
-    // Print visualization
     printBarChart(results);
-
-    // Log the results to a file
     logResultsToFile(results);
 }
