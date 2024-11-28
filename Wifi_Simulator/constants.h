@@ -11,5 +11,5 @@ const int PACKET_SIZE = 1024;          // Packet size in bytes (1 KB)
 const int MAX_RETRIES = 5;             // Maximum number of retries
 const int CSI_PACKET_SIZE = 200;       // Size of CSI packet in bytes (WiFi 5)
 const int NUM_SUBCHANNELS = 10;        // Number of subchannels in WiFi 6 for OFDMA
-
+const double GUARD_INTERVAL_MS = 0.0008;
 #endif
