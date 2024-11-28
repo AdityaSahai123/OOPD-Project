@@ -2,12 +2,19 @@
 #include "constants.h"
 #include <cmath>
 #include <algorithm>
+#include <iostream> // Optional: for debugging/logging purposes
 
 WiFi6::WiFi6(int numUsers, int numSubchannels, double bandwidthMHz, int packetSize)
     : numUsers(numUsers), numSubchannels(numSubchannels), bandwidthMHz(bandwidthMHz), packetSize(packetSize) {
 
     for (int i = 0; i < numUsers; ++i) {
         users.emplace_back(i);  // Adding each user to the vector
+    }
+
+    // Validation to ensure subchannel bandwidth is reasonable
+    if (numSubchannels > bandwidthMHz / 2) {
+        std::cerr << "Warning: Number of subchannels exceeds practical limit. Adjusting to max possible." << std::endl;
+        numSubchannels = static_cast<int>(bandwidthMHz / 2);
     }
 }
 
@@ -16,9 +23,14 @@ double WiFi6::simulateTransmission() {
 
     // CSI phase (200 bytes per user)
     totalTime += (CSI_PACKET_SIZE * 8 * numUsers) / (bandwidthMHz * 1e6);  
+    // Assumption: CSI transmission uses full channel bandwidth (idealized scenario)
+
     // Simulating round-robin OFDMA scheduling
     int rounds = static_cast<int>(std::ceil((double)numUsers / numSubchannels));
     totalTime += rounds * OFDMA_PARALLEL_TIME_MS * 1e-3;  // Time in seconds
+    
+    // Optional: add guard interval per round if required
+    totalTime += rounds * GUARD_INTERVAL_MS * 1e-3;  
 
     return totalTime;  // Return total time spent on transmission
 }
@@ -27,25 +39,27 @@ double WiFi6::calculateThroughput() {
     double subchannelBandwidth = bandwidthMHz / numSubchannels;  // Bandwidth per subchannel
     double baseThroughput = subchannelBandwidth * BITS_PER_SYMBOL * CODING_RATE;  // Per subchannel
 
-    
-    double userPenalty = std::pow((double)numUsers / numSubchannels, 1.3);  // Softer penalty
+    // Adjust throughput based on contention (heuristic model)
+    double userPenalty = std::pow((double)numUsers / numSubchannels, 1.3);  
     baseThroughput /= userPenalty;
 
     // Max throughput can't exceed total channel capacity
     double maxThroughput = bandwidthMHz * BITS_PER_SYMBOL * CODING_RATE;
     baseThroughput = std::min(baseThroughput * numSubchannels, maxThroughput);
 
-    return std::max(baseThroughput, 1.0001);
+    return std::max(baseThroughput, 1.0001);  // Ensure minimum throughput is non-zero
 }
 
 double WiFi6::calculateAverageLatency() {
-    double baseLatency = OFDMA_PARALLEL_TIME_MS;  // Base OFDMA time
-    double contentionFactor = ((double)numUsers / numSubchannels) * 1.2;  // Reduced contention multiplier
-    return baseLatency + contentionFactor * 1.5;  // ms
+    double baseLatency = OFDMA_PARALLEL_TIME_MS;  // Base OFDMA time in ms
+
+    // Contentious environment factor to simulate delays with increased users
+    double contentionFactor = ((double)numUsers / numSubchannels) * 1.2;  
+    return baseLatency + contentionFactor * 1.5;  // Adjusted with multiplier
 }
 
 double WiFi6::calculateMaxLatency() {
-    double baseLatency = OFDMA_PARALLEL_TIME_MS;  
-    double maxLatencyFactor = ((double)numUsers / numSubchannels) * 2.0;  // Account for delays
-    return baseLatency + maxLatencyFactor * 2.5;  // ms
+    double baseLatency = OFDMA_PARALLEL_TIME_MS;  // Base OFDMA latency
+    double maxLatencyFactor = ((double)numUsers / numSubchannels) * 2.0;  // Account for heavier contention and worst-case scenarios
+    return baseLatency + maxLatencyFactor * 2.5;  // More pessimistic latency estimation
 }
