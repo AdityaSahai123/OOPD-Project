@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <fstream> // For file operations
 #include "wifi4.h"
 #include "wifi5.h"
 #include "wifi6.h"
@@ -29,6 +30,12 @@ private:
 
     // Private method to print results in tabular format
     void printResultsTable(const std::vector<SimulationResult>& results);
+
+    // Private method to print bar chart visualization
+    void printBarChart(const std::vector<SimulationResult>& results);
+
+    // Private method to log results to a file
+    void logResultsToFile(const std::vector<SimulationResult>& results);
 };
 
 #endif
